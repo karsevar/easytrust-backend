@@ -7,6 +7,7 @@ function generateToken(user) {
     email: user.email,
     firstName: user.first_name,
     lastName: user.last_name,
+    relationshipId: user.relationship_id,
   };
 
   const secret = process.env.JSON_SECRET;
@@ -16,6 +17,15 @@ function generateToken(user) {
   };
 
   return jwt.sign(payload, secret, options);
+}
+
+function addUserAsRelationship(user) {
+  return db("relationships")
+    .insert(user, "id")
+    .then((ids) => {
+      const [id] = ids;
+      return id;
+    });
 }
 
 function addUser(user) {
@@ -45,4 +55,5 @@ module.exports = {
   addUser,
   addUserToRelationships,
   findUserByEmail,
+  addUserAsRelationship,
 };
