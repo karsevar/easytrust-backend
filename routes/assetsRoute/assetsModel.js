@@ -45,6 +45,20 @@ function getAssetsByUser(user_id) {
   return db("assets").where({ user_id: user_id });
 }
 
+function getAssetsByUserWithOwner(user_id) {
+  return db("ownership as o")
+    .join("assets as a", "o.asset_id", "a.id")
+    .where({ user_id: user_id })
+    .select(
+      "o.asset_id",
+      "a.gifted",
+      "a.asset_name",
+      "a.asset_value",
+      "a.asset_description",
+      "o.relationship_id"
+    );
+}
+
 function getAssetsByRelationshipId(relationship_id) {
   return db("ownership as o")
     .where({ relationship_id: relationship_id })
@@ -61,4 +75,5 @@ module.exports = {
   getAssetsByUser,
   getAssetsByRelationshipId,
   getAllOwnershipRecords,
+  getAssetsByUserWithOwner,
 };

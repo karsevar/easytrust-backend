@@ -17,8 +17,7 @@ router.post("/addAssets", authenticateToken, (req, res) => {
     .addAssets(req.body, req.user.userId)
     .then((results) => {
       res.status(201).json({
-        message: "added new assets to assets table and ownership table",
-        recordsLength: results,
+        message: "Added new assets to assets table and ownership table",
       });
     })
     .catch((error) => {
@@ -60,6 +59,23 @@ router.get("/getAssetsByOwner/:id", authenticateToken, (req, res) => {
     .catch((error) => {
       res.status(500).json({
         message: "Unable to retrieve data from database",
+        error: error,
+      });
+    });
+});
+
+router.get("/getAssetsByUserWithOwner", authenticateToken, (req, res) => {
+  assetsDB
+    .getAssetsByUserWithOwner(req.user.userId)
+    .then((results) => {
+      res.status(200).json({
+        message: `Found User id ${req.user.userId} records in the database`,
+        assetsData: results,
+      });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: "Unable to query through database.",
         error: error,
       });
     });
