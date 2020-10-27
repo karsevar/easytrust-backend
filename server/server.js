@@ -6,7 +6,7 @@ const cors = require("cors");
 const authRoute = require("../routes/authRoute/authRoute.js");
 const livingTrustRoute = require("../routes/livingTrustRoute/livingTrustRoute.js");
 const relationshipsRoute = require("../routes/relationshipsRoute/relationshipsRoute.js");
-
+const assetsRoute = require("../routes/assetsRoute/assetsRoute.js");
 const server = express();
 
 server.use(helmet());
@@ -16,6 +16,7 @@ server.use(cors());
 server.use("/livingTrust", livingTrustRoute);
 server.use("/relationships", relationshipsRoute);
 server.use("/auth", authRoute);
+server.use("/assets", assetsRoute);
 server.use;
 
 server.get("/", (req, res) => {

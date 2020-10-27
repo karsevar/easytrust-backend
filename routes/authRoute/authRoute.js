@@ -17,19 +17,42 @@ router.post(
   "/registerTrial",
   userMiddleware.validateRegisterPost,
   (req, res) => {
-    let user = req.body;
+    let userData = { email: req.body.email };
 
     userDB
-      .addUser(user)
+      .addUser(userData)
       .then((saved) => {
         console.log("userId", saved);
-        const token = userDB.generateToken({ ...user, id: saved });
+        let relationshipData = {
+          first_name: req.body.first_name,
+          last_name: req.body.last_name,
+          relationship: "owner",
+          user_id: saved,
+        };
 
-        res.status(201).json({
-          message: `User name: ${user.first_name} ${user.last_name} has been placed as a trial user.`,
-          token,
-          id: saved,
-        });
+        userDB
+          .addUserToRelationships(relationshipData)
+          .then((relation_id) => {
+            const token = userDB.generateToken({
+              ...userData,
+              ...relationshipData,
+              id: saved,
+              relationship_id: relation_id,
+            });
+
+            res.status(201).json({
+              message: `User name: ${relationshipData.first_name} ${relationshipData.last_name} has been placed as a trial user.`,
+              token,
+              id: saved,
+              relationship_id: relation_id,
+            });
+          })
+          .catch((error) => {
+            res.status(500).json({
+              message: "unable to add user information to relationships table",
+              error: error,
+            });
+          });
       })
       .catch((error) => {
         res.status(500).json({
