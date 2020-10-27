@@ -4,6 +4,7 @@ exports.up = function (knex) {
     tbl.string("asset_name", 255).notNullable();
     tbl.float("asset_value");
     tbl.text("asset_description");
+    tbl.string("asset_type");
     tbl.boolean("gifted");
     tbl
       .integer("user_id")
