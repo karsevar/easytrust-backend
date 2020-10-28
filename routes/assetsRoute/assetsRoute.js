@@ -16,9 +16,20 @@ router.post("/addAssets", authenticateToken, (req, res) => {
   assetsDB
     .addAssets(req.body, req.user.userId)
     .then((results) => {
-      res.status(201).json({
-        message: "Added new assets to assets table and ownership table",
-      });
+      assetsDB
+        .getAssetsByUserWithOwner(req.user.userId)
+        .then((results) => {
+          res.status(201).json({
+            message: `Assets added to database. Found User id ${req.user.userId} records in the database`,
+            assetsData: results,
+          });
+        })
+        .catch((error) => {
+          res.status(500).json({
+            message: "Unable to query through database.",
+            error: error,
+          });
+        });
     })
     .catch((error) => {
       res.status(500).json({
