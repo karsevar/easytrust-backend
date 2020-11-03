@@ -18,7 +18,6 @@ function addAssets(assets, user_id) {
             {
               asset_name: asset.asset_name,
               asset_value: asset.asset_value,
-              asset_description: asset.asset_description,
               gifted: false,
               user_id: user_id,
             },
